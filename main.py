@@ -54,4 +54,4 @@ def mainPage():
     elif value == 'C':
         print("The function for changeing credentials page")
     elif value == 'Q':
-        print("The function for quiting")
+        closeGame()
