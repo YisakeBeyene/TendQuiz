@@ -5,11 +5,11 @@ def LoginPage():
                 3)Quit
     """)
     userInput=input("Enter Option")
-    if userInput='1':
+    if userInput=='1':
         Login()
-    elif userInput='2':
+    elif userInput=='2':
         NewAccount()
-    elif userInput='3':
+    elif userInput=='3':
         closeGame()
     else:
         LoginPage()
