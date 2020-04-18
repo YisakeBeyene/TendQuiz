@@ -26,7 +26,11 @@ def NewAccount():
             passwordCheck=True
         else:
             input('passwords were not the same')
-
+    displayName=input('Choose a display name:')
+    #if display name taken loop
+    input('Done!')
+    #store to database
+    Login()
 def Login():
     username=input("Username:")
     password=input("Password:")
