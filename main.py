@@ -4,7 +4,7 @@ def LoginPage():
                 2)Sign Up
                 3)Quit
     """)
-    userInput=input("Enter Option")
+    userInput=input("Enter Option: ")
     if userInput=='1':
         Login()
     elif userInput=='2':
@@ -14,8 +14,12 @@ def LoginPage():
     else:
         LoginPage()
 def closeGame():
+    print("Something")
+
+
+
 def NewAccount():
-    Print("Input your Credentials")
+    print("Input your Credentials")
     fname=input('Input your First Name')
     email=input('Input your email')
     passwordCheck=False
@@ -43,19 +47,72 @@ def Login():
 
 LoginPage()
 
-
 def mainPage():
-    print("To play game press S:")
+    print("To play game press P:")
     print("To see highscore press H:")
     print("TO change personal credentials press C:")
     print("To quit press Q:")
     value = input("Enter your input here:")
 
-    if value == 'S':
-        print("The function for questions page")
+    if value == 'P':
+        playGame()
     elif value == 'H':
-        print("The function for highscore page")
+        seeHighScore()
     elif value == 'C':
-        print("The function for changeing credentials page")
+        changeCredentials()
     elif value == 'Q':
         closeGame()
+
+
+def seeHighScore():
+    print("The top five highscores are:")
+    print("1)" + "The name from DB" + "Score from DB")
+    print("2)" + "The name from DB" + "Score from DB")
+    print("3)" + "The name from DB" + "Score from DB")
+    print("4)" + "The name from DB" + "Score from DB")
+    print("5)" + "The name from DB" + "Score from DB")
+
+
+def playGame():
+    for i in range (10):
+        createQuestion(i)
+
+
+
+
+
+def createQuestion(i):
+#Choses randomly from a group of questions
+    print("Soemthing")
+
+def changeCredentials():
+    print(""" What do you want to change:
+                    1)Name
+                    2)Email
+                    3)Password
+                    4)Quit
+        """)
+
+    #This might need other additional helping methods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
