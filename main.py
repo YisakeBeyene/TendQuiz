@@ -1,3 +1,11 @@
+def LoginPage():
+    print(""" Welcome to the Trendy Game:
+                1)Login
+                2)Sign Up
+                3)Quit
+    """)
+
+LoginPage()
 
 
 def mainPage():
