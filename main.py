@@ -3,6 +3,8 @@ def LoginPage():
                 1)Login
                 2)Sign Up
                 3)Quit
+                4)Edit
+                
     """)
 
 LoginPage()
