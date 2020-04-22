@@ -4,7 +4,7 @@ Created on Wed Apr 22 10:55:45 2020
 
 @author: Aquib Akhtar
 """
-import os.path
+
 import sqlite3
 from pytrends.request import TrendReq
 import pandas as pd
@@ -15,11 +15,11 @@ import pandas as pd
     
 conn=sqlite3.connect('database.db')
 c=conn.cursor()
-"""
-#only on first time creation
+
+c.execute('''DROP TABLE highscore''')
 c.execute('''
               
-              CREATE TABLE userData
+              CREATE TABLE IF NOT EXISTS userData
               (userpass STRING, 
               useremail STRING,
               userdisplayname STRING,
@@ -27,23 +27,24 @@ c.execute('''
               ''')
     
 c.execute('''
-              CREATE TABLE highscore
-              (userID INTEGER,
-              highscore INTEGER)
+              CREATE TABLE IF NOT EXISTS highscore
+              (userDisplay INTEGER,
+              highscore INTEGER,
+              FOREIGN KEY(userDisplay) REFERENCES userData(userdisplayname))
               ''')
               
 c.execute('''          
-              CREATE TABLE searchKey
+              CREATE TABLE IF NOT EXISTS searchKey
               (searchTerm STRING UNIQUE)
               ''')
               
 c.execute('''         
-              CREATE TABLE categories
+              CREATE TABLE IF NOT EXISTS categories
               (cat STRING)
               ''')
              
 c.execute('''
-              CREATE TABLE searchTerms
+              CREATE TABLE IF NOT EXISTS searchTerms
               (searchTerm STRING,
               cat STRING,
               r1 STRING,
@@ -57,7 +58,7 @@ c.execute('''
               
 conn.commit()
 conn.close()
-"""
+
 """
 conn=sqlite3.connect('database.db',isolation_level=None)
 c= conn.cursor()

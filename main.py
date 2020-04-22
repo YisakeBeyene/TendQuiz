@@ -36,10 +36,10 @@ def NewAccount():
         password2 = input('input your password again')
         if password == password2:
             passwordCheck = True
-            passwword=password2
+            password=password2
         else:
             input('passwords were not the same')
-    displayName = input('Choose a display name:')
+    
     # if display name taken loop
     
     conn=sqlite3.connect('database.db',isolation_level=None)
@@ -61,7 +61,7 @@ def Login():
     password = input("Password:")
     
     if usernameCheck(username,password):# Check SQL for username and password, return with true or false:
-        mainPage()
+        mainPage(username)
     else:
         input("Login Failed, Press Enter to Try again")
         Login()
@@ -86,15 +86,17 @@ def usernameCheck(email,password):
     
 
 
-def mainPage():
+def mainPage(username):
     print("To play game press P:")
     print("To see highscore press H:")
     print("TO change personal credentials press C:")
     print("To quit press Q:")
     value = input("Enter your input here:")
+    value=value.capitalize()
 
     if value == 'P':
-        playGame()
+        score=playGame()
+        updateHighscore(score,username)
     elif value == 'H':
         seeHighScore()
     elif value == 'C':
@@ -102,14 +104,65 @@ def mainPage():
     elif value == 'Q':
         closeGame()
 
+def updateHighscore(score,email):
+    print(score)
+    conn=sqlite3.connect('database.db',isolation_level=None)
+    c= conn.cursor()
+    param=('''
+              SELECT * from userData WHERE useremail = ? ;''')
+
+    paramarray=[str(email)]
+    c.execute(param,paramarray,)
+    masteruser=c.fetchall()
+    conn.close()
+    
+    
+    
+    conn=sqlite3.connect('database.db',isolation_level=None)
+    c= conn.cursor()
+    param=('''
+              SELECT * from highscore WHERE userDisplay = ? ;''')
+
+    paramarray=[masteruser[0][2]]
+    c.execute(param,paramarray,)
+    user=c.fetchall()
+    conn.close()
+    if not user:
+        
+        conn=sqlite3.connect('database.db',isolation_level=None)
+        c= conn.cursor()
+        
+        paramarray=[masteruser[0][2],score]
+        c.execute('''
+              INSERT INTO highscore VALUES
+              (?,?);''',paramarray)
+        conn.close()
+        
+    elif user[0][1]<score:
+        
+        conn=sqlite3.connect('database.db',isolation_level=None)
+        c= conn.cursor()
+        paramarray=[score,masteruser[0][2]]
+        c.execute('''
+              UPDATE highscore SET highscore=? WHERE userDisplay=?;''',paramarray)
+        conn.close()
+    seeHighScore()
+    
+    
 
 def seeHighScore():
     print("The top five highscores are:")
-    print("1)" + "The name from DB" + "Score from DB")
-    print("2)" + "The name from DB" + "Score from DB")
-    print("3)" + "The name from DB" + "Score from DB")
-    print("4)" + "The name from DB" + "Score from DB")
-    print("5)" + "The name from DB" + "Score from DB")
+    conn=sqlite3.connect('database.db',isolation_level=None)
+    c= conn.cursor()
+    param=('''
+              SELECT * from highscore;''')
+
+    
+    c.execute(param,)
+    user=c.fetchall()
+    conn.close()
+    for row in user:
+        print(row)
 
 
 def playGame():
@@ -148,7 +201,7 @@ def playGame():
         if useranswer=='4':
             if displayOptions[3][3]==displayOptions[1]:
                 score+=1
-    print(score)
+    return(score)
     
 
 
@@ -193,4 +246,4 @@ def changeCredentials():
         """)
 
     # This might need other additional helping methods
-playGame()
+LoginPage()
