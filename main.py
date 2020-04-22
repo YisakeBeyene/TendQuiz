@@ -175,11 +175,12 @@ def playGame():
     cats=c.fetchall()
     conn.close()
     
-    choice=random.choice(cats)
+
     
     usedTerms=[]
     score=0
     for i in range(10):
+        choice = random.choice(cats)
         displayOptions=(createQuestion(usedTerms,choice))
         displayOptions[0]=str(displayOptions[0])
         displayOptions[0] = displayOptions[0].replace('(', '')
@@ -189,20 +190,33 @@ def playGame():
         print(displayOptions[0])
         useranswer=input(("Input your selection: "))
         usedTerms.append(displayOptions[2])
+
         if useranswer=='1':
             if displayOptions[3][0]==displayOptions[1]:
-                score+=1
+                score += 1
+                print("You got the right answer")
+            else:
+                print("You didn't get the right answer. The right answer was " + displayOptions[1])
         if useranswer=='2':
             if displayOptions[3][1]==displayOptions[1]:
                 score+=1
+                print("You got the right answer")
+            else:
+                print("You didn't get the right answer. The right answer was " + displayOptions[1])
         if useranswer=='3':
             if displayOptions[3][2]==displayOptions[1]:
-                score+=1  
+                score+=1
+                print("You got the right answer")
+            else:
+                print("You didn't get the right answer. The right answer was " + displayOptions[1])
         if useranswer=='4':
             if displayOptions[3][3]==displayOptions[1]:
                 score+=1
+                print("You got the right answer")
+            else:
+                print("You didn't get the right answer. The right answer was " + displayOptions[1])
     return(score)
-    
+
 
 
 def createQuestion(used,choice):
