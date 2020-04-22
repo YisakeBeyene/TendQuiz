@@ -1,7 +1,7 @@
 import sqlite3
 import pandas as pd
 import sys
-
+import random
 
 def LoginPage():
     print(""" Welcome to the Trendy Game:
@@ -57,16 +57,33 @@ def NewAccount():
 
 
 def Login():
-    username = input("Username:")
+    username = input("Email:")
     password = input("Password:")
-    usernameCheck = True  # Check SQL for username and password, return with true or false
-    if usernameCheck:
+    
+    if usernameCheck(username,password):# Check SQL for username and password, return with true or false:
         mainPage()
     else:
         input("Login Failed, Press Enter to Try again")
         Login()
 
+def usernameCheck(email,password):
+    conn=sqlite3.connect('database.db',isolation_level=None)
+    c= conn.cursor()
+    param=('''
+              SELECT * from userData WHERE useremail = ? ;''')
 
+    paramarray=[str(email)]
+    c.execute(param,paramarray,)
+    userdata=c.fetchall()
+    conn.close()
+    if str(userdata[0][0])==password:
+        return True
+    else:
+        return False
+    
+    
+    
+    
 
 
 def mainPage():
@@ -96,13 +113,75 @@ def seeHighScore():
 
 
 def playGame():
+    
+    conn=sqlite3.connect('database.db',isolation_level=None)
+    c= conn.cursor()
+    param=('''
+              SELECT * from categories;''')
+    c.execute(param,)
+    cats=c.fetchall()
+    conn.close()
+    
+    choice=random.choice(cats)
+    
+    usedTerms=[]
+    score=0
     for i in range(10):
-        createQuestion(i)
+        displayOptions=(createQuestion(usedTerms,choice))
+        displayOptions[0]=str(displayOptions[0])
+        displayOptions[0] = displayOptions[0].replace('(', '')
+        displayOptions[0] = displayOptions[0].replace(')', '')
+        displayOptions[0] = displayOptions[0].replace('(', '')
+        displayOptions[0] = displayOptions[0].replace('\'', '')
+        print(displayOptions[0])
+        useranswer=input(("Input your selection: "))
+        usedTerms.append(displayOptions[2])
+        if useranswer=='1':
+            if displayOptions[3][0]==displayOptions[1]:
+                score+=1
+        if useranswer=='2':
+            if displayOptions[3][1]==displayOptions[1]:
+                score+=1
+        if useranswer=='3':
+            if displayOptions[3][2]==displayOptions[1]:
+                score+=1  
+        if useranswer=='4':
+            if displayOptions[3][3]==displayOptions[1]:
+                score+=1
+    print(score)
+    
 
 
-def createQuestion(i):
-    # Choses randomly from a group of questions
-    print("Soemthing")
+def createQuestion(used,choice):
+    
+    conn=sqlite3.connect('database.db',isolation_level=None)
+    c= conn.cursor()
+    param=('''
+              SELECT * FROM searchTerms WHERE cat = ?;''')
+    
+    c.execute(param,choice,)
+    results=c.fetchall()
+    conn.close()
+    for row in results:
+        answer=row[2]
+        options=[row[2].strip(),row[3].strip(),row[4].strip(),row[5].strip()]
+        random.shuffle(options)
+        if row[0] in used:
+            pass
+        else:
+            
+            question=(""""The category is :"""+str(choice)+"""
+In Which Country was """+str(row[0])+""" the most searched term:"""+"""
+                    
+                    1) """+str(options[0])+"""
+                    2) """+str(options[1])+"""
+                    3) """+str(options[2])+"""
+                    4) """+str(options[3]))
+            answerarray=[question,answer,row[0],options]
+            return answerarray
+            
+    
+    
 
 
 def changeCredentials():
@@ -114,4 +193,4 @@ def changeCredentials():
         """)
 
     # This might need other additional helping methods
-NewAccount()
+playGame()

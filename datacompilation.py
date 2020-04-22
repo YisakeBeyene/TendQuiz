@@ -58,7 +58,30 @@ c.execute('''
 conn.commit()
 conn.close()
 """
-    
+"""
+conn=sqlite3.connect('database.db',isolation_level=None)
+c= conn.cursor()
+c.execute('''
+              INSERT INTO categories VALUES
+              ('Pop');''')
+
+c.execute('''
+              INSERT INTO categories VALUES
+              ('Food and Drink');''')
+c.execute('''
+              INSERT INTO categories VALUES
+              ('Sport');''')
+
+c.execute('''
+              INSERT INTO categories VALUES
+              ('Books & Literature');''')
+
+c.execute('''
+              INSERT INTO categories VALUES
+              ('Games');''')
+c.close()
+"""
+
 
 pytrends = TrendReq(hl='en-US', tz=360, timeout=(10,25), retries=2, backoff_factor=0.1)
 
