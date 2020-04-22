@@ -16,7 +16,7 @@ import pandas as pd
 conn=sqlite3.connect('database.db')
 c=conn.cursor()
 
-c.execute('''DROP TABLE highscore''')
+#c.execute('''DROP TABLE highscore''')
 c.execute('''
               
               CREATE TABLE IF NOT EXISTS userData

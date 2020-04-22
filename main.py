@@ -2,6 +2,7 @@ import sqlite3
 import pandas as pd
 import sys
 import random
+userdataname=""
 
 def LoginPage():
     print(""" Welcome to the Trendy Game:
@@ -57,10 +58,12 @@ def NewAccount():
 
 
 def Login():
+    global userdataname
     username = input("Email:")
     password = input("Password:")
     
     if usernameCheck(username,password):# Check SQL for username and password, return with true or false:
+        userdataname=username
         mainPage(username)
     else:
         input("Login Failed, Press Enter to Try again")
@@ -100,7 +103,7 @@ def mainPage(username):
     elif value == 'H':
         seeHighScore()
     elif value == 'C':
-        changeCredentials()
+        changeCredentials(username)
     elif value == 'Q':
         closeGame()
 
@@ -163,6 +166,8 @@ def seeHighScore():
     conn.close()
     for row in user:
         print(row)
+    input("Press Enter To Continue...")
+    mainPage(userdataname)
 
 
 def playGame():
@@ -251,13 +256,62 @@ In Which Country was """+str(row[0])+""" the most searched term:"""+"""
     
 
 
-def changeCredentials():
+def changeCredentials(username):
+    global userdataname
     print(""" What do you want to change:
                     1)Name
                     2)Email
                     3)Password
                     4)Quit
         """)
+        
+    
+    conn=sqlite3.connect('database.db',isolation_level=None)
+    c= conn.cursor()
+    print(userdataname)
+    param=('''
+              SELECT * FROM userData WHERE useremail = ?;''')
+    
+    c.execute(param,[userdataname],)
+    results=c.fetchall()
+    localuser=results[0][2]
+    conn.close()
+    
+    
+    userChoice=input("Input your Selection:")
+    if userChoice=="1":
+        
+        newname=input('Input your new display name')
+        conn=sqlite3.connect('database.db',isolation_level=None)
+        c= conn.cursor()
+        paramarray=[newname,localuser]
+        c.execute('''
+                  UPDATE userData SET userdisplayname= ? WHERE userdisplayname= ?;''',paramarray)
+        conn.close()
+        LoginPage()
+        
+    if userChoice=="2":
+        newemail=input('Input your new display name')
+        conn=sqlite3.connect('database.db',isolation_level=None)
+        c= conn.cursor()
+        paramarray=[newemail,localuser]
+        c.execute('''
+                  UPDATE userData SET useremail= ? WHERE userdisplayname= ?;''',paramarray)
+        conn.close()
+        LoginPage()
+        
+    if userChoice=="3":
+        newpass=input('Input your new password')
+        conn=sqlite3.connect('database.db',isolation_level=None)
+        c= conn.cursor()
+        paramarray=[newpass,localuser]
+        c.execute('''
+                  UPDATE userData SET userpass= ? WHERE userdisplayname= ?;''',paramarray)
+        conn.close()
+        LoginPage()
+        
+    if userChoice=="4":
+        sys.exit(0)
 
     # This might need other additional helping methods
 LoginPage()
