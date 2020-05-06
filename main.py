@@ -108,7 +108,7 @@ def mainPage(username):
         closeGame()
 
 def updateHighscore(score,email):
-    print(score)
+    print("Your score was: ",score)
     conn=sqlite3.connect('database.db',isolation_level=None)
     c= conn.cursor()
     param=('''
@@ -262,13 +262,13 @@ def changeCredentials(username):
                     1)Name
                     2)Email
                     3)Password
-                    4)Quit
+                    4)Delete user
+                    5)Quit
         """)
         
     
     conn=sqlite3.connect('database.db',isolation_level=None)
     c= conn.cursor()
-    print(userdataname)
     param=('''
               SELECT * FROM userData WHERE useremail = ?;''')
     
@@ -311,7 +311,19 @@ def changeCredentials(username):
         LoginPage()
         
     if userChoice=="4":
-        sys.exit(0)
+        deleteUser(username)
+    if userChoice=="5":
+        closeGame()
+        
+def deleteUser(username):
+    conn=sqlite3.connect('database.db',isolation_level=None)
+    c= conn.cursor()
+    param=('''
+              DELETE * FROM userData WHERE useremail = ?;''')
+    
+    c.execute(param,[userdataname],)
+    conn.close()
+    LoginPage()
 
     # This might need other additional helping methods
 LoginPage()
